@@ -6,14 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <TextView
         android:id="@+id/z"
-        android:layout_width="110dp"
-        android:layout_height="64dp"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginBottom="67dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="246dp"
+        android:text="Z"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/z5"
+        android:layout_width="202dp"
+        android:layout_height="51dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="147dp"
+        android:textSize="20dp" />
+
+
+
+
+
+    TextView
+        android:id="@+id/z7"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="93dp"
+        android:layout_marginBottom="21dp"
+        android:text="Z"
+        android:textSize="20dp" />
+
+
+    <TextView
+        android:id="@+id/z6"
+        android:layout_width="203dp"
+        android:layout_height="53dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="89dp"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/z7"
+        android:layout_width="203dp"
+        android:layout_height="53dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginBottom="34dp"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/z2"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="211dp"
+        android:layout_marginBottom="246dp"
         android:text="Z"
         android:textSize="20dp" />
 
@@ -66,36 +124,49 @@
         android:text="TextView"
         android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="119dp"
-        android:layout_marginBottom="308dp"
-        android:text="Konum Al" />
-
     <TextView
         android:id="@+id/x"
-        android:layout_width="114dp"
-        android:layout_height="76dp"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginBottom="213dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="396dp"
+        android:text="X"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/x2"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="211dp"
+        android:layout_marginBottom="394dp"
         android:text="X"
         android:textSize="20dp" />
 
     <TextView
         android:id="@+id/y"
-        android:layout_width="124dp"
-        android:layout_height="72dp"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="23dp"
-        android:layout_marginBottom="138dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="321dp"
+        android:text="Y"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/y2"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="211dp"
+        android:layout_marginBottom="319dp"
         android:text="Y"
         android:textSize="20dp" />
 
