@@ -42,12 +42,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivitys {
-    TextView txt, txt1, txt2, txt3, txt4, x, y, z, x2, y2, z2, z5,z6,z7;
+    TextView txt, txt1, txt2, txt3, txt4, x, y, z, x2, y2, z2, z5, z6, z7, z8, z9;
     LocationManager locationManager;
     String provider;
     Button btn;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
         z5 = findViewById(R.id.z5);
         z6 = findViewById(R.id.z6);
         z7 = findViewById(R.id.z7);
+        z8 = findViewById(R.id.z8);
+        z9 = findViewById(R.id.z9);
 
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -112,40 +115,82 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
         sensorManager2.registerListener(rvlistener, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    float[] orientations = new float[5];
+    float sum = 0;
+    int count = 0;
+    int counter=0;
+    int maxcount = 30;
+    float avg = 0;
+
+
+    ArrayClass arrayClass=new ArrayClass(maxcount); // ArrayClasstan bir yeni nesne ürettim ve constructor sayesinde size değerini verdim
+
+    float[] currentArrayY = new float[arrayClass.getSize()]; // s
+
     public SensorEventListener rvlistener = new SensorEventListener() {
+
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
-            float[] rotationMatrix = new float[16];
-            SensorManager.getRotationMatrixFromVector(
-                    rotationMatrix, sensorEvent.values
-            );
-            float[] remappRotationMatrix = new float[16];
-            SensorManager.remapCoordinateSystem(rotationMatrix,
-                    SensorManager.AXIS_X,
-                    SensorManager.AXIS_Z,
-                    remappRotationMatrix);
+            counter++;
+            if(counter==30) {
+                counter=0;
+                float[] rotationMatrix = new float[16];
+                SensorManager.getRotationMatrixFromVector(
+                        rotationMatrix, sensorEvent.values
+                );
+                float[] remappRotationMatrix = new float[16];
+                SensorManager.remapCoordinateSystem(rotationMatrix,
+                        SensorManager.AXIS_X,
+                        SensorManager.AXIS_Z,
+                        remappRotationMatrix);
 
-            float[] orientations = new float[5];
-            SensorManager.getOrientation(remappRotationMatrix, orientations);
 
-            for (int i = 0; i < 5; i++) {
-                orientations[i] = (float) (Math.toDegrees(orientations[i]));
+                SensorManager.getOrientation(remappRotationMatrix, orientations);
+                for (int i = 0; i < orientations.length; i++) {
+                    orientations[i] = (float) (Math.toDegrees(orientations[i]));
 
-                if (orientations[1] > 45) {
-                    getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
-                } else if (orientations[1] < -45) {
-                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-                } else if (Math.abs(orientations[1]) < 10) {
-                    getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+                    float x3 = orientations[0];
+                    float y3 = orientations[1];
+                    float z3 = orientations[2];
+
+                    MainActivity.this.x2.setText("X : " + (int) x3 + " derece");
+                    MainActivity.this.y2.setText("Y : " + (int) y3 + " derece");
+                    MainActivity.this.z2.setText("Z : " + (int) z3 + " derece");
+
                 }
-                float x3 = orientations[0];
-                float y3 = orientations[1];
-                float z3 = orientations[2];
-                MainActivity.this.x2.setText("X : " + (int) x3 + " derece");
-                MainActivity.this.y2.setText("Y : " + (int) y3 + " derece");
-                MainActivity.this.z2.setText("Z : " + (int) z3 + " derece");
 
+                currentArrayY[count] = orientations[1];
+                sum += orientations[1];
+
+                if (count == maxcount-1) {
+
+                    avg = sum / currentArrayY.length;
+
+                    z9.setText("ort:" + avg);
+                    if (avg > 15 || avg < -15) {
+
+                        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                        new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                "y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                                .show();
+                        play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                        play.start();
+                    }
+
+                    sum = 0;
+                    count=0;
+
+                } else {
+                    z8.setText("count: " + count);
+                    count++;
+                }
             }
+
+
 
         }
 
@@ -154,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
 
         }
     };
-
 
     @Override
     protected void onDestroy() {
@@ -197,19 +241,19 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
                         Manifest.permission.ACCESS_FINE_LOCATION}, 44
                 );
             }
-            float[] values=sensorEvent.values;
-             int orientation=ORIENTATION_UNKNOWN;
-            int orientation2=ORIENTATION_UNKNOWN;
-            int orientation3=ORIENTATION_UNKNOWN;
-            float X=-values[_DATA_X];
-            float Y=-values[_DATA_Y];
-            float Z=-values[_DATA_Z];
-            float magnitude=X*X+Y*Y;
+            float[] values = sensorEvent.values;
+            int orientation = ORIENTATION_UNKNOWN;
+            int orientation2 = ORIENTATION_UNKNOWN;
+            int orientation3 = ORIENTATION_UNKNOWN;
+            float X = -values[_DATA_X];
+            float Y = -values[_DATA_Y];
+            float Z = -values[_DATA_Z];
+            float magnitude = X * X + Y * Y;
 
-            if(magnitude*4>= Z*Z){
+            if (magnitude * 4 >= Z * Z) {
                 float OneEightyOverPi = 57.29577957855f;
-                float angle = (float)Math.atan2(-Y, X) * OneEightyOverPi;
-                orientation = 90 - (int)Math.round(angle);
+                float angle = (float) Math.atan2(-Y, X) * OneEightyOverPi;
+                orientation = 90 - (int) Math.round(angle);
                 // normalize to 0 - 359 range
                 while (orientation >= 360) {
                     orientation -= 360;
@@ -218,8 +262,8 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
                     orientation += 360;
                 }
 
-                float angle2 = (float)Math.atan2(-Z, X) * OneEightyOverPi;
-                orientation2 = 90 - (int)Math.round(angle2);
+                float angle2 = (float) Math.atan2(-Z, X) * OneEightyOverPi;
+                orientation2 = 90 - (int) Math.round(angle2);
                 // normalize to 0 - 359 range
                 while (orientation2 >= 360) {
                     orientation2 -= 360;
@@ -228,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
                     orientation2 += 360;
                 }
 
-                float angle3 = (float)Math.atan2(-Z, Y) * OneEightyOverPi;
-                orientation3 = 90 - (int)Math.round(angle3);
+                float angle3 = (float) Math.atan2(-Z, Y) * OneEightyOverPi;
+                orientation3 = 90 - (int) Math.round(angle3);
                 // normalize to 0 - 359 range
                 while (orientation3 >= 360) {
                     orientation3 -= 360;
@@ -240,32 +284,10 @@ public class MainActivity extends AppCompatActivity implements MainActivitys {
 
 
             }
-            z5.setText("Oreientation X="+orientation);
-            z6.setText("Oreientation Y="+orientation2);
-            z7.setText("Oreientation Z="+orientation3);
-            Log.d("Oreientation",""+orientation);
-            if(orientation!=mOrientationDeg){
-                mOrientationRounded=orientation;
-                if(orientation==-1){}
-                     else if(orientation <= 45 || orientation > 315){//round to 0
-                        tempOrientRounded = 1;//portrait
-                    }
-                    else if(orientation > 45 && orientation <= 135){//round to 90
-                        tempOrientRounded = 2; //lsleft
-                    }
-                    else if(orientation > 135 && orientation <= 225){//round to 180
-                        tempOrientRounded = 3; //upside down
-                    }
-                    else if(orientation > 225 && orientation <= 315){//round to 270
-                        tempOrientRounded = 4;//lsright
-                    }
-                }
-            if(mOrientationRounded!=tempOrientRounded){
-                mOrientationRounded=tempOrientRounded;
-            }
-        //    z6.setText("tempOrientRounded="+tempOrientRounded);
-            }
-
+            z5.setText("Oreientation X=" + orientation);
+            z6.setText("Oreientation Y=" + orientation2);
+            z7.setText("Oreientation Z=" + orientation3);
+        }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
