@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity implements MainActivitys {
+public class MainActivity extends AppCompatActivity {
     TextView txt, txt1, txt2, txt3, txt4, x, y, z, x2, y2, z2, z5, z6, z7, z8, z9;
     LocationManager locationManager;
     String provider;
