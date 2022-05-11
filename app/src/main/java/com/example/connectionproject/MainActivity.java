@@ -1,40 +1,32 @@
 package com.example.connectionproject;
 
-import static androidx.constraintlayout.motion.widget.Debug.getLocation;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import static java.lang.Math.subtractExact;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.Html;
 import android.util.Log;
-import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -42,16 +34,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
-    TextView txt, txt1, txt2, txt3, txt4, x, y, z, x2, y2, z2, z5, z6, z7, z8, z9;
+    TextView txt, txt1, txt2, txt3, txt4, x, y, z, x2, y2, z2, z5, z6, z7, z8, z9,zilk,yilk,xilk,textView;
     LocationManager locationManager;
     String provider;
-    Button btn;
+    Button btn,button;
     FusedLocationProviderClient fusedLocationProviderClient;
     SensorManager sensorManager;
     SensorManager sensorManager2;
@@ -60,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     SensorTrack track;
     Sensor sensor2;
     MediaPlayer play;
+    public static int y3first = 0;
 
     public static final int UPSIDE_DOWN = 3;
     public static final int LANDSCAPE_RIGHT = 4;
@@ -84,43 +76,13 @@ public class MainActivity extends AppCompatActivity {
         txt4.setVisibility(View.INVISIBLE);
     }
 
-    public void init() {
-        txt = findViewById(R.id.txt);
-        txt1 = findViewById(R.id.txt1);
-        txt2 = findViewById(R.id.txt2);
-        txt4 = findViewById(R.id.txt4);
-        x = findViewById(R.id.x);
-        y = findViewById(R.id.y);
-        z = findViewById(R.id.z);
-        x2 = findViewById(R.id.x2);
-        y2 = findViewById(R.id.y2);
-        z2 = findViewById(R.id.z2);
-        z5 = findViewById(R.id.z5);
-        z6 = findViewById(R.id.z6);
-        z7 = findViewById(R.id.z7);
-        z8 = findViewById(R.id.z8);
-        z9 = findViewById(R.id.z9);
-
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        track = new SensorTrack();
-        sensorManager.registerListener(track, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager2 = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        sensor2 = sensorManager2.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        this.sensorManager2 = (SensorManager) this.getSystemService(SENSOR_SERVICE);
-        this.sensor2 = this.sensorManager2.getDefaultSensor(4);
-
-        Sensor rotationVectorSensor = sensorManager2.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        sensorManager2.registerListener(rvlistener, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
     float[] orientations = new float[5];
     float sum = 0;
     int count = 0;
     int counter=0;
     int maxcount = 30;
     float avg = 0;
+
 
 
     ArrayClass arrayClass=new ArrayClass(maxcount); // ArrayClasstan bir yeni nesne ürettim ve constructor sayesinde size değerini verdim
@@ -132,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             counter++;
-            if(counter==30) {
-                counter=0;
+            if (counter == 100) {
+                counter = 0;
                 float[] rotationMatrix = new float[16];
                 SensorManager.getRotationMatrixFromVector(
                         rotationMatrix, sensorEvent.values
@@ -144,71 +106,65 @@ public class MainActivity extends AppCompatActivity {
                         SensorManager.AXIS_Z,
                         remappRotationMatrix);
 
-
+                int x3 = (int) orientations[0];
+                int y3 = (int) orientations[1];
+                int z3 = (int) orientations[2];
                 SensorManager.getOrientation(remappRotationMatrix, orientations);
                 for (int i = 0; i < orientations.length; i++) {
                     orientations[i] = (float) (Math.toDegrees(orientations[i]));
-
-                    float x3 = orientations[0];
-                    float y3 = orientations[1];
-                    float z3 = orientations[2];
-
                     MainActivity.this.x2.setText("X : " + (int) x3 + " derece");
                     MainActivity.this.y2.setText("Y : " + (int) y3 + " derece");
                     MainActivity.this.z2.setText("Z : " + (int) z3 + " derece");
 
                 }
 
-                currentArrayY[count] = orientations[1];
-                sum += orientations[1];
+                button.setOnClickListener(new View.OnClickListener() {
 
-                if (count == maxcount-1) {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity.this.xilk.setText("X : " + (int) x3 + " derece");
+                        MainActivity.this.yilk.setText("Y : " + (int) y3 + " derece");
+                        MainActivity.this.zilk.setText("Z : " + (int) z3 + " derece");
+                        y3first=y3;
 
-                    avg = sum / currentArrayY.length;
-
-                    z9.setText("ort:" + avg);
-                    if (avg > 15 || avg < -15) {
-
-                        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                        new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                                "y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                                .show();
-                        play = MediaPlayer.create(MainActivity.this, R.raw.song);
-                        play.start();
                     }
+                });
 
-                    sum = 0;
-                    count=0;
-
-                } else {
-                    z8.setText("count: " + count);
-                    count++;
+                    currentArrayY[count] = orientations[1];
+                    sum += orientations[1];
+                    if (count == maxcount - 1) {
+                        avg = sum / currentArrayY.length;
+                        z9.setText("ort:" + avg);
+                        if ((y3first - avg) > 15 || (y3first - avg) < -15) {
+                            ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                            new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                    "y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                                    .show();
+                            play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                            play.start();
+                        }
+                        sum = 0;
+                        count = 0;
+                    } else {
+                        z8.setText("count: " + count);
+                        count++;
+                    }
                 }
             }
-
-
-
-        }
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
-
         }
     };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(track);
     }
-
-
     public class SensorTrack implements SensorEventListener {
-
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             float sensor_data[] = sensorEvent.values;
@@ -216,19 +172,6 @@ public class MainActivity extends AppCompatActivity {
             y.setText("Y: " + sensor_data[1] + " m/s2");
             z.setText("Z: " + sensor_data[2] + " m/s2");
             int xx = (int) sensor_data[0];
-          /*  if(xx>=9 || xx<0){
-                ( (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                        "x yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                        .show();
-                play=MediaPlayer.create(MainActivity.this,R.raw.song);
-                play.start();
-                //sıfırlandığında durma kodu yazılacak
-            }*/
             txt.setVisibility(View.VISIBLE);
             txt1.setVisibility(View.VISIBLE);
             txt2.setVisibility(View.VISIBLE);
@@ -281,14 +224,11 @@ public class MainActivity extends AppCompatActivity {
                 while (orientation3 < 0) {
                     orientation3 += 360;
                 }
-
-
             }
             z5.setText("Oreientation X=" + orientation);
             z6.setText("Oreientation Y=" + orientation2);
             z7.setText("Oreientation Z=" + orientation3);
         }
-
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
             switch (i) {
@@ -303,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-
         private void getLocation() {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -315,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Location> task) {
                     Location location = task.getResult();
                     if (location != null) {
-
                         try {
                             Geocoder geocoder = new Geocoder(MainActivity.this,
                                     Locale.getDefault());
@@ -342,9 +280,43 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-
                 }
             });
         }
+    }
+    public void init() {
+        txt = findViewById(R.id.txt);
+        txt1 = findViewById(R.id.txt1);
+        txt2 = findViewById(R.id.txt2);
+        txt4 = findViewById(R.id.txt4);
+        zilk=findViewById(R.id.zilk);
+        xilk=findViewById(R.id.xilk);
+        yilk=findViewById(R.id.yilk);
+        button=findViewById(R.id.button);
+        x = findViewById(R.id.x);
+        y = findViewById(R.id.y);
+        z = findViewById(R.id.z);
+        x2 = findViewById(R.id.x2);
+        y2 = findViewById(R.id.y2);
+        z2 = findViewById(R.id.z2);
+        z5 = findViewById(R.id.z5);
+        z6 = findViewById(R.id.z6);
+        z7 = findViewById(R.id.z7);
+        z8 = findViewById(R.id.z8);
+        z9 = findViewById(R.id.z9);
+
+
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        track = new SensorTrack();
+        sensorManager.registerListener(track, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager2 = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensor2 = sensorManager2.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        this.sensorManager2 = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        this.sensor2 = this.sensorManager2.getDefaultSensor(4);
+
+        Sensor rotationVectorSensor = sensorManager2.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorManager2.registerListener(rvlistener, rotationVectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
