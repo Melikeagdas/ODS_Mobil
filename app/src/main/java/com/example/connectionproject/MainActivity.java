@@ -136,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.this.y2.setText("Y : " + (int) y3 + " derece");
                         MainActivity.this.z2.setText("Z : " + (int) z3 + " derece");
                     }
-                    String derece1=txt_number.getText().toString();
+                    String derece1 = txt_number.getText().toString();
                     button.setOnClickListener(new View.OnClickListener() {
-
                         @Override
                         public void onClick(View view) {
                             btnilklendir = true;
@@ -153,61 +152,60 @@ public class MainActivity extends AppCompatActivity {
                                 z3first = Integer.valueOf(String.valueOf(zilk.getText()));
                                 zilk.setText(String.valueOf((int) z3first));
 
-                                    derece = Integer.valueOf(String.valueOf(txt_number.getText()));
-                                    txt_number.setText(String.valueOf((int) derece));
-                            }
-                            else
-                            {
-                                Toast.makeText(getApplicationContext(),"Derece değer, boş geçilemez !",Toast.LENGTH_LONG).show();
+                                derece = Integer.valueOf(String.valueOf(txt_number.getText()));
+                                txt_number.setText(String.valueOf((int) derece));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Derece değeri boş geçilemez !", Toast.LENGTH_LONG).show();
+                                btnilklendir=false;
                             }
                         }
                     });
-
-
                     if (count == maxcount) {
                         avg = sumY / currentArrayY.length;
                         z9.setText("ort Y :" + avg);
-                        if (btnilklendir == true) {
-                                if ((y3first - avg) > derece || (y3first - avg) < -derece) {
-                                    ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                                    new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                                            "Y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    })
-                                            .show();
-                                    play = MediaPlayer.create(MainActivity.this, R.raw.song);
-                                    play.start();
-                                }
-                                avgZ = sumZ / currentArrayY.length;
-                                z10.setText("ort Z: " + avgZ);
-                                if ((z3first - avgZ) > derece || (z3first - avgZ < -derece)) {
-                                    ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                                    new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                                            "Z yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    })
-                                            .show();
-                                    play = MediaPlayer.create(MainActivity.this, R.raw.song);
-                                    play.start();
-                                }
+                        if (btnilklendir == true && !derece1.matches("")) {
+                            if ((y3first - avg) > derece || (y3first - avg) < -derece) {
+                                ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                                new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                        "Y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                        .show();
+                                play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                                play.start();
 
-
-                            sumZ = 0;
-                            sumY = 0;
-                            count = 0;
+                            }
+                            avgZ = sumZ / currentArrayY.length;
+                            z10.setText("ort Z: " + avgZ);
+                            if ((z3first - avgZ) > derece || (z3first - avgZ < -derece)) {
+                                ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                                new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                        "Z yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                })
+                                        .show();
+                                play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                                play.start();
+                            }
                         }
-                    } else {
-                        currentArrayY[count] = orientations[1];
-                        sumY += orientations[1];
-                        sumZ += orientations[2];
-                        z8.setText("count: " + count);
-                        count++;
+                                sumZ = 0;
+                                sumY = 0;
+                                count = 0;
 
-                    }
+                        }
+                    else {
+                            currentArrayY[count] = orientations[1];
+                            sumY += orientations[1];
+                            sumZ += orientations[2];
+                            z8.setText("count: " + count);
+                            count++;
+
+                        }
+
                 }
             }
         }
