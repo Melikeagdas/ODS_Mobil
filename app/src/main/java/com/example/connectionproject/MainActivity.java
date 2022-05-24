@@ -41,9 +41,9 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
-    TextView x2, y2, z2, z5, z6, z7, z8, z9, zilk, yilk, xilk, textView4, z10;
-    EditText txt_dizi, txt_veri, txt_number;
-    Button btngoster, button;
+    TextView x2, y2, z2, z5, z6, z7, z8, z9, zilk, yilk, xilk, textView4, z10, z,mesaj;
+    EditText txt_dizi, txt_veri, txt_number, txt_number2,txt_mesaj;
+    Button btngoster, btnilklendir;
     FusedLocationProviderClient fusedLocationProviderClient;
     SensorManager sensorManager;
     SensorManager sensorManager2;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public int tempOrientRounded;
 
     boolean isActive = false;
-    boolean btnilklendir = false;
+    boolean ilklendir = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,19 +99,23 @@ public class MainActivity extends AppCompatActivity {
     float sumZ = 0;
     float avgZ = 0;
     float avg = 0;
+    float sumX = 0;
+    float avgX = 0;
     int count = 0;
     int counter = 0;
     int maxcount = 0;
     int y3first;
     int z3first;
-    int derece = 0;
-
+    int dereceY = 0;
+    int dereceZ = 0;
+    int mesaj_sıklıgı=0;
+    int anlik_mesajY=0;
+    int anlik_mesajZ=0;
 
     public SensorEventListener rvlistener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             if (isActive) {
-                //
                 ArrayClass arrayClass = new ArrayClass(maxcount); // ArrayClasstan bir yeni nesne ürettim ve constructor sayesinde size değerini verdim
                 float[] currentArrayY = new float[arrayClass.getSize()];
                 counter++;
@@ -132,16 +136,18 @@ public class MainActivity extends AppCompatActivity {
                     SensorManager.getOrientation(remappRotationMatrix, orientations);
                     for (int i = 0; i < orientations.length; i++) {
                         orientations[i] = (float) (Math.toDegrees(orientations[i]));
-                        MainActivity.this.x2.setText("X : " + (int) x3 + " derece");
-                        MainActivity.this.y2.setText("Y : " + (int) y3 + " derece");
-                        MainActivity.this.z2.setText("Z : " + (int) z3 + " derece");
+                        MainActivity.this.x2.setText("X : " + (int) x3 + " °");
+                        MainActivity.this.y2.setText("Y : " + (int) y3 + " °");
+                        MainActivity.this.z2.setText("Z : " + (int) z3 + " °");
                     }
                     String derece1 = txt_number.getText().toString();
-                    button.setOnClickListener(new View.OnClickListener() {
+                    String derece2 = txt_number2.getText().toString();
+                    String mesajsikligi=txt_mesaj.getText().toString();
+                    btnilklendir.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            btnilklendir = true;
-                            if (!derece1.matches("")) {
+                            ilklendir = true;
+                            if (!derece1.matches("") && !derece2.matches("") && !mesajsikligi.matches("") ) {
                                 MainActivity.this.xilk.setText(String.valueOf(x3));
                                 MainActivity.this.yilk.setText(String.valueOf(y3));
                                 MainActivity.this.zilk.setText(String.valueOf(z3));
@@ -152,60 +158,77 @@ public class MainActivity extends AppCompatActivity {
                                 z3first = Integer.valueOf(String.valueOf(zilk.getText()));
                                 zilk.setText(String.valueOf((int) z3first));
 
-                                derece = Integer.valueOf(String.valueOf(txt_number.getText()));
-                                txt_number.setText(String.valueOf((int) derece));
+                                dereceY = Integer.valueOf(String.valueOf(txt_number.getText()));
+                                txt_number.setText(String.valueOf((int) dereceY));
+
+                                dereceZ=Integer.valueOf(String.valueOf(txt_number2.getText()));
+                                txt_number2.setText(String.valueOf((int) dereceZ));
+
+                                mesaj_sıklıgı=Integer.valueOf(String.valueOf(txt_mesaj.getText()));
+                                txt_mesaj.setText(String.valueOf((int) mesaj_sıklıgı));
                             } else {
-                                Toast.makeText(getApplicationContext(), "Derece değeri boş geçilemez !", Toast.LENGTH_LONG).show();
-                                btnilklendir=false;
+                                Toast.makeText(getApplicationContext(), "Derece veya mesaj sıklığı değeri boş geçilemez !", Toast.LENGTH_LONG).show();
+                               ilklendir = false;
                             }
                         }
                     });
                     if (count == maxcount) {
-                        avg = sumY / currentArrayY.length;
-                        z9.setText("ort Y :" + avg);
-                        if (btnilklendir == true && !derece1.matches("")) {
-                            if ((y3first - avg) > derece || (y3first - avg) < -derece) {
-                                ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                                new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                                        "Y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                            if (ilklendir == true && !derece1.matches("") && !derece2.matches("") ) {
+                                avg = sumY / currentArrayY.length;
+                                z9.setText("ort Y :" + avg);
+                                if ((y3first - avg) > dereceY || (y3first - avg) < -dereceY) {
+                                    anlik_mesajY++;
+                                    mesaj.setText(""+anlik_mesajY);
+                                    if (anlik_mesajY == mesaj_sıklıgı) {
+                                        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                                        new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                                "Y yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                                .show();
+                                        play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                                        play.start();
+                                        anlik_mesajY=0;
                                     }
-                                })
-                                        .show();
-                                play = MediaPlayer.create(MainActivity.this, R.raw.song);
-                                play.start();
+                                }
+                                avgZ = sumZ / currentArrayY.length;
+                                z10.setText("ort Z: " + avgZ);
+                                if ((z3first - avgZ) > dereceZ || (z3first - avgZ < -dereceZ)) {
+                                    anlik_mesajZ++;
+                                    if (anlik_mesajZ == mesaj_sıklıgı) {
+                                        ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
+                                        new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
+                                                "Z yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                                .show();
+                                        play = MediaPlayer.create(MainActivity.this, R.raw.song);
+                                        play.start();
+                                        anlik_mesajZ=0;
+                                    }
+                                }
+
+                                avgX = sumX / currentArrayY.length;
+                                z.setText("ort X: " + avgX);
 
                             }
-                            avgZ = sumZ / currentArrayY.length;
-                            z10.setText("ort Z: " + avgZ);
-                            if ((z3first - avgZ) > derece || (z3first - avgZ < -derece)) {
-                                ((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
-                                new AlertDialog.Builder(MainActivity.this).setTitle("").setMessage("" +
-                                        "Z yönüne dikkat ediniz").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                })
-                                        .show();
-                                play = MediaPlayer.create(MainActivity.this, R.raw.song);
-                                play.start();
-                            }
-                        }
-                                sumZ = 0;
-                                sumY = 0;
-                                count = 0;
+                            sumX = 0;
+                            sumZ = 0;
+                            sumY = 0;
+                            count = 0;
 
-                        }
-                    else {
-                            currentArrayY[count] = orientations[1];
-                            sumY += orientations[1];
-                            sumZ += orientations[2];
-                            z8.setText("count: " + count);
-                            count++;
-
-                        }
-
+                    } else {
+                        currentArrayY[count] = orientations[1];
+                        sumX += orientations[0];
+                        sumY += orientations[1];
+                        sumZ += orientations[2];
+                        z8.setText("count: " + count);
+                        count++;
+                    }
                 }
             }
         }
@@ -219,18 +242,21 @@ public class MainActivity extends AppCompatActivity {
         zilk = findViewById(R.id.zilk);
         xilk = findViewById(R.id.xilk);
         yilk = findViewById(R.id.yilk);
-        button = findViewById(R.id.button);
         x2 = findViewById(R.id.x2);
         y2 = findViewById(R.id.y2);
         z2 = findViewById(R.id.z2);
         z8 = findViewById(R.id.z8);
         z9 = findViewById(R.id.z9);
         z10 = findViewById(R.id.z10);
+        z = findViewById(R.id.z);
         btngoster = findViewById(R.id.btngoster);
+        btnilklendir = findViewById(R.id.btnilklendir);
         txt_veri = findViewById(R.id.txt_veri);
         txt_dizi = findViewById(R.id.txt_dizi);
-        txt_veri = findViewById(R.id.txt_veri);
         txt_number = findViewById(R.id.txt_number);
+        txt_number2 = findViewById(R.id.txt_number2);
+        txt_mesaj=findViewById(R.id.txt_mesaj);
+        mesaj=findViewById(R.id.textView9);
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
