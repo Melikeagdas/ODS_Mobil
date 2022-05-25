@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                     if (maxcount == 0 || counter2 == 0) {
                         Toast.makeText(getApplicationContext(), "Dizi boyutu veya veri sıklığı boş geçilemez !", Toast.LENGTH_LONG).show();
                     }
-
                 }
             }
         });
@@ -108,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Snackbar.make(mainlayout,"Dizi boyutu girmeye yarar.",Snackbar.LENGTH_LONG).show();
-
             }
         });
         imgbtn_veri.setOnClickListener(new View.OnClickListener() {
@@ -141,14 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(mainlayout,"Koordinat sapmalarında verilecek mesajın sıklığını ifade eder. ",Snackbar.LENGTH_LONG).show();
             }
         });
-
     }
-
-    private void openpopupWindow() {
-        Intent popupwindow=new Intent(MainActivity.this, PopupWindow.class);
-        startActivity(popupwindow);
-    }
-
     float[] orientations = new float[5];
     float sumY = 0;
     float sumZ = 0;
